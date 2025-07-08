@@ -1,0 +1,62 @@
+
+
+import { CastSlider } from "@/component/cast";
+import { MovieDetails } from "@/component/movie-details";
+import { fetchMovieCast, fetchMovieDetails } from "@/lib/fetchmovies";
+import { Metadata } from "next";
+
+type MoviePageParams = {
+  params: {
+    id: string;
+  };
+};
+
+
+
+export default async function MoviePage({ params }: MoviePageParams) {
+  const movie = await fetchMovieDetails(params.id);
+  const cast = await fetchMovieCast(params.id);
+  console.log("Movie Details:", movie, cast);
+
+  return (
+    <div className="space-y-8">
+      <MovieDetails
+        id={movie.id}
+        title={movie.title}
+        overview={movie.overview}
+        backdrop_path={movie.backdrop_path}
+        poster_path={movie.poster_path}
+        release_date={movie.release_date}
+        vote_average={movie.vote_average}
+        runtime={movie.runtime}
+        genres={movie.genres}
+        director={movie.director}
+        budget={movie.budget}
+        revenue={movie.revenue}
+        tagline={movie.tagline}
+        trailer_url={movie.trailer_url}
+      />
+
+      <div className="container px-4 space-y-12">
+        <CastSlider cast={cast} />
+        {/* <MovieCarousel title="Similar Movies" movies={similarMovies} /> */}
+      </div>
+    </div>
+  );
+}
+
+export async function generateMetadata(
+  { params }: MoviePageParams
+): Promise<Metadata> {
+  const movie = await fetchMovieDetails(params.id);
+
+  return {
+    title: movie.title,
+    description: movie.overview,
+    openGraph: {
+      title: movie.title,
+      description: movie.overview,
+      images: [`https://image.tmdb.org/t/p/w780${movie.backdrop_path}`],
+    },
+  };
+}
