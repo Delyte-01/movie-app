@@ -9,7 +9,10 @@ async function fetchFromTMDB(endpoint: string) {
   }
   return res.json();
 }
+export async function fetchGenres() {
+  return fetchFromTMDB("/genre/movie/list");
 
+}
 export async function fetchTopRatedMovies() {
   return fetchFromTMDB("/movie/top_rated");
 }
@@ -25,9 +28,8 @@ export async function fetchUpcomingMovies() {
 export async function fetchNowPlayingMovies() {
   return fetchFromTMDB("/movie/now_playing");
 }
-export async function fetchSimilarMovies(id: string) {
-  return fetchFromTMDB(`/movie/${id}/similar`);
-}
+
+
 export async function fetchMovieDetails(id: string) {
   const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
   if (!res.ok) throw new Error("Failed to fetch movie details");
@@ -47,4 +49,21 @@ export async function fetchMovieCast(id: string) {
   }
 }
   
+export async function fetchSimilarMovies(movieId: string) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/movie/${movieId}/similar?api_key=${API_KEY}`
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch similar movies");
+    }
+
+    const data = await res.json();
+    return data.results;
+  } catch (error) {
+    console.error("Error fetching similar movies:", error);
+    return [];
+  }
+}
 

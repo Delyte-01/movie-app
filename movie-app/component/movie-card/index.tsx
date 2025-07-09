@@ -6,15 +6,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, Play, Plus } from "lucide-react";
+import { Movie } from "@/lib/types";
 
 
-interface Movie {
-  id: number;
-  title: string;
-  poster_path: string;
-  vote_average: number;
-  release_date: string;
-}
+
 
 interface MovieCardProps {
   movie: Movie;

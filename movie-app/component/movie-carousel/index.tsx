@@ -7,18 +7,19 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { MovieCard } from "../movie-card";
 import { useMovieContext } from "@/hooks/use-context";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Movie } from "@/lib/types";
 
-interface Movieprop {
-  id: number;
-  title: string;
-  poster_path: string;
-  vote_average: number;
-  release_date: string;
-}
+// interface Movieprop {
+//   id: number;
+//   title: string;
+//   poster_path: string;
+//   vote_average: number;
+//   release_date: string;
+// }
 
 interface MovieCarouselProps {
   title: string;
-  movies: Movieprop[];
+  movies: Movie[];
 }
 
 export function MovieCarousel({

@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
+@import 'keen-slider/keen-slider.min.css';
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -120,7 +124,17 @@
     @apply bg-background text-foreground;
   }
 }
-
+body {
+  font-family: 'Inter', sans-serif;
+}
+h1, h2, h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+p {
+  font-family: 'Montserrat', sans-serif;
+}
 
 /* Custom scrollbar for webkit browsers */
 ::-webkit-scrollbar {

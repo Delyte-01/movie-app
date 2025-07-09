@@ -1,6 +1,7 @@
-import { fetchMovieDetails, fetchMovieCast } from "@/lib/fetchmovies";
+import { fetchMovieDetails, fetchMovieCast, fetchSimilarMovies } from "@/lib/fetchmovies";
 import { MovieDetails } from "@/component/movie-details";
 import { CastSlider } from "@/component/cast";
+import { MovieCarousel } from "@/component/movie-carousel";
 ;
 
 
@@ -8,6 +9,8 @@ import { CastSlider } from "@/component/cast";
 export default async function MoviePage({ params }: { params: { id: string } }) {
   const movie = await fetchMovieDetails(params.id);
   const cast = await fetchMovieCast(params.id);
+  const similarMovies = await fetchSimilarMovies(params.id);
+
 
   if (!movie) {
     return (
@@ -25,7 +28,7 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
       {/* Cast Section */}
       <div className="container px-4 space-y-12">
         {cast?.length > 0 && <CastSlider cast={cast} />}
-        {/* Future: <MovieCarousel title="Similar Movies" movies={similarMovies} /> */}
+         <MovieCarousel title="Similar Movies" movies={similarMovies} />
       </div>
     </div>
   );

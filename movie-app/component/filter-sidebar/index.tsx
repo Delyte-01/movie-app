@@ -11,7 +11,7 @@ export function FilterSidebar() {
     setMovies,
     setIsLoading,
     popular,
-    fetchFilteredMoviesFromContext
+    fetchFilteredMoviesFromContext,
   } = useMovieContext();
 
   const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
@@ -21,7 +21,7 @@ export function FilterSidebar() {
   const [showAll, setShowAll] = useState(true);
 
   const handleGenreSelect = (id: number) => {
-    setSelectedGenre(prev => (prev === id ? null : id));
+    setSelectedGenre((prev) => (prev === id ? null : id));
     setShowAll(false);
   };
 
@@ -41,7 +41,7 @@ export function FilterSidebar() {
       with_genres: selectedGenre ? selectedGenre.toString() : undefined,
       primary_release_year: releaseYear || undefined,
       vote_average_gte: rating ? rating.toString() : undefined,
-      sort_by: sortBy
+      sort_by: sortBy,
     };
 
     fetchFilteredMoviesFromContext(filters);
