@@ -1,4 +1,4 @@
-// Updated FilterSidebar with fetch logic moved to context and single genre selection
+// Updated FilterSidebar to work with movieType (movie/tv) and dynamic release year keys
 
 "use client";
 
@@ -8,44 +8,35 @@ import { useEffect, useState } from "react";
 export function FilterSidebar() {
   const {
     genres,
-    setMovies,
-    setIsLoading,
-    popular,
+    movieType,
+    setSelectedGenre,
+    selectedGenre,
+    countries,
+    originCountry,
+    setOriginCountry,
     fetchFilteredMoviesFromContext,
   } = useMovieContext();
 
-  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
-  const [releaseYear, setReleaseYear] = useState("");
-  const [rating, setRating] = useState(0);
-  const [sortBy, setSortBy] = useState("popularity.desc");
-  const [showAll, setShowAll] = useState(true);
-
-  const handleGenreSelect = (id: number) => {
-    setSelectedGenre((prev) => (prev === id ? null : id));
-    setShowAll(false);
-  };
-
-  const handleShowAll = () => {
-    setSelectedGenre(null);
-    setReleaseYear("");
-    setRating(0);
-    setSortBy("popularity.desc");
-    setShowAll(true);
-    setMovies(popular);
-  };
+  const [releaseYear, setReleaseYear] = useState<string>("");
+  const [rating, setRating] = useState<number>(0);
+  const [sortBy, setSortBy] = useState<string>("popularity.desc");
 
   useEffect(() => {
-    if (showAll) return;
-
-    const filters = {
-      with_genres: selectedGenre ? selectedGenre.toString() : undefined,
-      primary_release_year: releaseYear || undefined,
+    const filters: Record<string, string | undefined> = {
+      with_genres: selectedGenre || undefined,
       vote_average_gte: rating ? rating.toString() : undefined,
       sort_by: sortBy,
+      with_origin_country: originCountry || undefined,
     };
 
+    if (movieType === "movie") {
+      filters.primary_release_year = releaseYear || undefined;
+    } else {
+      filters.first_air_date_year = releaseYear || undefined;
+    }
+
     fetchFilteredMoviesFromContext(filters);
-  }, [selectedGenre, releaseYear, rating, sortBy]);
+  }, [selectedGenre, releaseYear, rating, sortBy, originCountry, movieType]);
 
   return (
     <div className="space-y-6 text-sm">
@@ -53,16 +44,6 @@ export function FilterSidebar() {
       <div>
         <h3 className="font-semibold mb-2 text-gray-800">Genres</h3>
         <div className="grid grid-cols-2 gap-2">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={showAll}
-              onChange={handleShowAll}
-              className="accent-blue-600"
-            />
-            <span>All</span>
-          </label>
-
           {genres.map((genre) => (
             <label
               key={genre.id}
@@ -71,8 +52,8 @@ export function FilterSidebar() {
               <input
                 type="radio"
                 name="genre"
-                checked={selectedGenre === genre.id}
-                onChange={() => handleGenreSelect(genre.id)}
+                checked={selectedGenre === genre.id.toString()}
+                onChange={() => setSelectedGenre(genre.id.toString())}
                 className="accent-blue-600"
               />
               <span>{genre.name}</span>
@@ -83,15 +64,14 @@ export function FilterSidebar() {
 
       {/* Release Year */}
       <div>
-        <h3 className="font-semibold mb-2 text-gray-800">Release Year</h3>
+        <h3 className="font-semibold mb-2 text-gray-800">
+          {movieType === "movie" ? "Release Year" : "First Air Year"}
+        </h3>
         <input
           type="number"
-          placeholder="e.g., 2024"
+          placeholder={movieType === "movie" ? "e.g., 2024" : "e.g., 2021"}
           value={releaseYear}
-          onChange={(e) => {
-            setReleaseYear(e.target.value);
-            setShowAll(false);
-          }}
+          onChange={(e) => setReleaseYear(e.target.value)}
           className="w-full p-2 border rounded-md"
         />
       </div>
@@ -104,10 +84,7 @@ export function FilterSidebar() {
           min="0"
           max="10"
           value={rating}
-          onChange={(e) => {
-            setRating(Number(e.target.value));
-            setShowAll(false);
-          }}
+          onChange={(e) => setRating(Number(e.target.value))}
           className="w-full"
         />
         <span className="text-sm text-gray-600">Min: {rating}</span>
@@ -118,15 +95,37 @@ export function FilterSidebar() {
         <h3 className="font-semibold mb-2 text-gray-800">Sort By</h3>
         <select
           value={sortBy}
-          onChange={(e) => {
-            setSortBy(e.target.value);
-            setShowAll(false);
-          }}
+          onChange={(e) => setSortBy(e.target.value)}
           className="w-full p-2 border rounded-md"
         >
           <option value="popularity.desc">Popularity</option>
           <option value="vote_average.desc">Top Rated</option>
-          <option value="primary_release_date.desc">Release Date</option>
+          <option
+            value={
+              movieType === "movie"
+                ? "primary_release_date.desc"
+                : "first_air_date.desc"
+            }
+          >
+            Release Date
+          </option>
+        </select>
+      </div>
+
+      {/* Country */}
+      <div>
+        <h3 className="font-semibold mb-2 text-gray-800">Country</h3>
+        <select
+          value={originCountry}
+          onChange={(e) => setOriginCountry(e.target.value)}
+          className="w-full p-2 border rounded-md"
+        >
+          <option value="">All Countries</option>
+          {countries.map((country) => (
+            <option key={country.code} value={country.code}>
+              {country.name}
+            </option>
+          ))}
         </select>
       </div>
     </div>

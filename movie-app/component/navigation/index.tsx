@@ -8,6 +8,9 @@ import { Input } from "@/components/ui/input";
 // import { ThemeToggle } from "@/components/theme-toggle";
 import { Menu, Search, User, Film } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import Image from "next/image";
+import SearchBar from "../search-bar";
+
 
 export function Navigation() {
   const pathname = usePathname();
@@ -15,8 +18,8 @@ export function Navigation() {
 
   const navItems = [
     { href: "/", label: "Home" },
-    { href: "/discover", label: "Discover" },
-    { href: "/watchlist", label: "Watchlist" },
+    { href: "/discover/tv", label: "Tv Series" },
+    { href: "/discover/movie", label: "Movies" },
   ];
 
   return (
@@ -24,7 +27,15 @@ export function Navigation() {
       <div className="container flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
-          <Film className="h-8 w-8 text-primary" />
+          {/* <Film className="h-8 w-8 text-primary" /> */}
+          <Image
+            src="https://res.cloudinary.com/dk5mfu099/image/upload/v1752484058/Tv_icon_logo_design_vector_image_on_VectorStock_kfhdp4.jpg"
+            alt="CineMax Logo"
+            width={50}
+            height={40}
+            className="rounded-lg object-cover h-8 w-8"
+          />
+
           <span className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
             CineMax
           </span>
@@ -53,12 +64,7 @@ export function Navigation() {
           <div className="hidden md:block">
             {isSearchOpen ? (
               <div className="flex items-center space-x-2">
-                <Input
-                  placeholder="Search movies..."
-                  className="w-64"
-                  autoFocus
-                  onBlur={() => setIsSearchOpen(false)}
-                />
+                <SearchBar />
               </div>
             ) : (
               <Button
@@ -71,7 +77,7 @@ export function Navigation() {
             )}
           </div>
 
-          <Link href="/search" className="md:hidden">
+          <Link href="/search-page" className="md:hidden">
             <Button variant="ghost" size="icon">
               <Search className="h-5 w-5" />
             </Button>
@@ -79,7 +85,7 @@ export function Navigation() {
 
           {/* <ThemeToggle /> */}
 
-          <Link href="/login">
+          <Link href="/">
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button>

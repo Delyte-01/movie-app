@@ -8,13 +8,16 @@ import { Play, Plus, Share, Star, Clock, Calendar } from "lucide-react";
 
 interface MovieDetailsProps {
   id: number;
-  title: string;
+  title?: string;
+  name?: string;
+  release_date?: string;
+  first_air_date?: string;
+  runtime?: number;
+  episode_run_time?: number[];
   overview: string;
   backdrop_path: string;
   poster_path: string;
-  release_date: string;
   vote_average: number;
-  runtime: number;
   genres: { id: number; name: string }[];
   director: string;
   budget: number;
@@ -26,12 +29,15 @@ interface MovieDetailsProps {
 export function MovieDetails({
   id,
   title,
+  name,
+  release_date,
+  first_air_date,
+  runtime,
+  episode_run_time,
   overview,
   backdrop_path,
   poster_path,
-  release_date,
   vote_average,
-  runtime,
   genres,
   director,
   budget,
@@ -40,6 +46,10 @@ export function MovieDetails({
   trailer_url,
 }: MovieDetailsProps) {
   const [showTrailer, setShowTrailer] = useState(false);
+
+   const displayTitle = title || name || "Untitled";
+   const displayDate = release_date || first_air_date || "Unknown";
+   const displayRuntime = runtime ?? episode_run_time?.[0] ?? "Unknown runtime";
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -70,7 +80,6 @@ export function MovieDetails({
           backgroundRepeat: "no-repeat",
         }}
       >
-      
         {/* Dark overlay from bottom */}
         <div className="absolute inset-0 bg-gradient-to-r from-neutral-900 via-neutral-900/80 to-neutral-900/80" />
       </div>
@@ -84,7 +93,7 @@ export function MovieDetails({
               <div className="relative aspect-[2/3] max-w-sm mx-auto md:mx-0">
                 <Image
                   src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-                  alt={title}
+                  alt={displayTitle}
                   fill
                   className="object-cover rounded-lg shadow-2xl"
                   priority
@@ -95,7 +104,9 @@ export function MovieDetails({
             {/* Details */}
             <div className="md:col-span-2 space-y-6">
               <div className="space-y-4">
-                <h1 className="text-4xl md:text-5xl font-bold">{title}</h1>
+                <h1 className="text-4xl md:text-5xl font-bold">
+                  {displayTitle}
+                </h1>
 
                 {tagline && (
                   <p className="text-xl text-muted-foreground italic">
@@ -113,11 +124,15 @@ export function MovieDetails({
                   </div>
                   <div className="flex items-center space-x-1">
                     <Calendar className="h-4 w-4" />
-                    <span>{new Date(release_date).getFullYear()}</span>
+                    <span>{new Date(displayDate).getFullYear()}</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <Clock className="h-4 w-4" />
-                    <span>{formatRuntime(runtime)}</span>
+                    <span>
+                      {typeof displayRuntime === "number"
+                        ? formatRuntime(displayRuntime)
+                        : displayRuntime}
+                    </span>
                   </div>
                 </div>
 
@@ -168,7 +183,7 @@ export function MovieDetails({
                   <Play className="mr-2 h-5 w-5 fill-current" />
                   Watch Trailer
                 </Button>
-                <Button size="lg" variant="outline">
+                <Button size="lg" variant="outline" className="text-black">
                   <Plus className="mr-2 h-5 w-5" />
                   Add to Watchlist
                 </Button>

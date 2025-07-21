@@ -1,16 +1,22 @@
-import { fetchMovieDetails, fetchMovieCast, fetchSimilarMovies } from "@/lib/fetchmovies";
+import {
+  fetchMovieDetails,
+  fetchMovieCast,
+  fetchSimilarMovies,
+} from "@/lib/fetchmovies";
 import { MovieDetails } from "@/component/movie-details";
 import { CastSlider } from "@/component/cast";
 import { MovieCarousel } from "@/component/movie-carousel";
-;
+import { Metadata } from "next";
 
 
-
-export default async function MoviePage({ params }: { params: { id: string } }) {
-  const movie = await fetchMovieDetails(params.id);
-  const cast = await fetchMovieCast(params.id);
-  const similarMovies = await fetchSimilarMovies(params.id);
-
+export default async function MoviePage({ params }: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params;
+  if (!id) return <div>Movie Show not found</div>;
+  const movie = await fetchMovieDetails(id);
+  const cast = await fetchMovieCast(id);
+  const similarMovies = await fetchSimilarMovies(id);
 
   if (!movie) {
     return (
@@ -28,18 +34,16 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
       {/* Cast Section */}
       <div className="container px-4 space-y-12">
         {cast?.length > 0 && <CastSlider cast={cast} />}
-         <MovieCarousel title="Similar Movies" movies={similarMovies} />
+        <MovieCarousel title="Similar Movies" movies={similarMovies} />
       </div>
     </div>
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}){
-  const movie = await fetchMovieDetails(params.id);
+export async function generateMetadata(
+  { params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const movie = await fetchMovieDetails(id);
 
   return {
     title: movie?.title || "Movie Details",

@@ -9,9 +9,8 @@ export function MobileNavigation() {
 
   const navItems = [
     { href: "/", label: "Home", icon: Home },
-    { href: "/Discover", label: "Discover", icon: SearchCode },
-    { href: "/watchlist", label: "Watchlist", icon: Bookmark },
-    { href: "/login", label: "Profile", icon: User },
+    { href: "/discover/tv", label: "TV series", icon: SearchCode },
+    { href: "/discover/movie", label: "Movies", icon: SearchCode },
   ];
 
   return (

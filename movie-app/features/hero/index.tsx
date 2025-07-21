@@ -49,7 +49,7 @@ export default function HeroSlider({ movies }: HeroSliderProps) {
           if (mouseOver) return;
           timeout = setTimeout(() => {
             slider.next();
-          }, 1000);
+          }, 3000);
         }
 
         slider.on("created", () => {
@@ -76,10 +76,10 @@ export default function HeroSlider({ movies }: HeroSliderProps) {
     <div className="relative mb-10">
       <div
         ref={sliderRef}
-        className="keen-slider h-[80vh] relative overflow-hidden"
+        className="keen-slider min-h-screen relative overflow-hidden"
       >
         {movies.map((movie) => (
-          <div key={movie.id} className="keen-slider__slide relative">
+          <div key={movie.id} className="keen-slider__slide relative ">
             <div className="absolute inset-0">
               <Image
                 src={
@@ -89,83 +89,77 @@ export default function HeroSlider({ movies }: HeroSliderProps) {
                 }
                 alt={movie.title}
                 fill
-                className="object-cover"
+                className="object-cover brightness-[0.85] sm:brightness-100 contrast-[1.1]"
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
             </div>
-
-            <div className="relative z-10 h-full flex items-center px-6 md:px-26 text-white max-w-5xl animate-fade-in">
+            <div className="relative z-10 h-full flex items-center px-4 sm:px-6 md:px-26 text-white max-w-6xl animate-fade-in">
               <div className="space-y-4">
                 {/* Movie Details */}
-                <div className="relative h-full flex items-center text-white">
-                  <div className="container px-4">
-                    <div className="max-w-2xl space-y-6">
-                      {/* Title */}
-                      <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                        {movie.title}
-                      </h1>
+                <div className="space-y-6">
+                  {/* Title */}
+                  <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold leading-snug sm:leading-tight drop-shadow-md">
+                    {movie.title}
+                  </h1>
 
-                      {/* Rating and Year */}
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                          <span className="font-semibold">
-                            {movie.vote_average.toFixed(1)}
-                          </span>
-                        </div>
-                        <span className="text-muted-foreground">
-                          {new Date(movie.release_date).getFullYear()}
-                        </span>
-                      </div>
-
-                      {/* Genres */}
-                      <div className="flex flex-wrap gap-2">
-                        {movie?.genres?.length > 0 &&
-                          movie.genres.map((genre) => (
-                            <Badge
-                              key={genre.id}
-                              variant="secondary"
-                              className="bg-background/50 backdrop-blur"
-                            >
-                              {genre.name}
-                            </Badge>
-                          ))}
-                      </div>
-
-                      {/* Overview */}
-                      <p className="text-lg  leading-relaxed max-w-xl">
-                        {movie.overview}
-                      </p>
-
-                      {/* Action Buttons */}
-                      <div className="flex flex-col sm:flex-row gap-4">
-                        <Button
-                          size="lg"
-                          className="bg-primary hover:bg-primary/90"
-                        >
-                          <Play className="mr-2 h-5 w-5 fill-current" />
-                          Watch Now
-                        </Button>
-                        <Button
-                          size="lg"
-                          variant="outline"
-                          className="bg-background/20 backdrop-blur border-white/20 hover:bg-background/30"
-                        >
-                          <Plus className="mr-2 h-5 w-5" />
-                          Add to Watchlist
-                        </Button>
-                        <Button
-                          size="lg"
-                          variant="ghost"
-                          className="hover:bg-background/20"
-                        >
-                          <Info className="mr-2 h-5 w-5" />
-                          More Info
-                        </Button>
-                      </div>
+                  {/* Rating and Year */}
+                  <div className="flex items-center flex-wrap gap-3 text-sm sm:text-base">
+                    <div className="flex items-center space-x-1">
+                      <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                      <span className="font-semibold">
+                        {movie.vote_average.toFixed(1)}
+                      </span>
                     </div>
+                    <span className="text-muted-foreground">
+                      {new Date(movie.release_date).getFullYear()}
+                    </span>
+                  </div>
+
+                  {/* Genres */}
+                  <div className="flex flex-wrap gap-2">
+                    {movie?.genres?.slice(0, 3).map((genre) => (
+                      <Badge
+                        key={genre.id}
+                        variant="secondary"
+                        className="bg-background/40 backdrop-blur-sm text-sm"
+                      >
+                        {genre.name}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  {/* Overview */}
+                  <p className="text-base sm:text-lg leading-relaxed max-w-2xl line-clamp-4 sm:line-clamp-5 text-white/90 drop-shadow">
+                    {movie.overview}
+                  </p>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <Button
+                      size="lg"
+                      className="bg-primary hover:bg-primary/90"
+                    >
+                      <Play className="mr-2 h-5 w-5 fill-current" />
+                      Watch Now
+                    </Button>
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="bg-white/10 backdrop-blur border-white/30 hover:bg-white/20"
+                    >
+                      <Plus className="mr-2 h-5 w-5" />
+                      Add to Watchlist
+                    </Button>
+                    <Button
+                      size="lg"
+                      variant="ghost"
+                      className="hover:bg-white/10 text-white/90"
+                    >
+                      <Info className="mr-2 h-5 w-5" />
+                      More Info
+                    </Button>
                   </div>
                 </div>
               </div>

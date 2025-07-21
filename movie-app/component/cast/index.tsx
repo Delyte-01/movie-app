@@ -57,8 +57,8 @@ export function CastSlider({ cast }: CastSliderProps) {
         ref={scrollRef}
         className="flex space-x-4 overflow-x-auto scrollbar-hide pb-4"
       >
-        {cast.map((member) => (
-          <div key={member.id} className="flex-none w-32 text-center">
+        {cast.map((member,i) => (
+          <div key={i} className="flex-none w-32 text-center">
             <div className="relative aspect-[2/3] w-full mb-2 overflow-hidden rounded-lg bg-muted">
               <Image
                 src={

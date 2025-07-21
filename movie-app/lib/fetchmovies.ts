@@ -9,10 +9,14 @@ async function fetchFromTMDB(endpoint: string) {
   }
   return res.json();
 }
-export async function fetchGenres() {
-  return fetchFromTMDB("/genre/movie/list");
 
-}
+export const fetchGenresForMedia = async (type: "movie" | "tv") => {
+  const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+  const url = `https://api.themoviedb.org/3/genre/${type}/list?api_key=${apiKey}&language=en-US`;
+
+  const res = await fetch(url);
+  return res.json();
+};
 export async function fetchTopRatedMovies() {
   return fetchFromTMDB("/movie/top_rated");
 }
@@ -21,9 +25,20 @@ export async function fetchPopularMovies() {
   return fetchFromTMDB("/movie/popular");
 }
 
-export async function fetchUpcomingMovies() {
-  return fetchFromTMDB("/movie/upcoming");
-}
+
+
+export const fetchUpcomingMovies = async () => {
+  const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+  if (!TMDB_API_KEY) throw new Error("Missing TMDB API Key");
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/upcoming?api_key=${TMDB_API_KEY}&language=en-US&page=1`
+  );
+
+  if (!res.ok) throw new Error("Failed to fetch upcoming movies");
+
+  return res.json();
+};
+
 
 export async function fetchNowPlayingMovies() {
   return fetchFromTMDB("/movie/now_playing");
@@ -67,3 +82,16 @@ export async function fetchSimilarMovies(movieId: string) {
   }
 }
 
+export async function fetchMovies({
+  mediaType = "movie",
+  page = 1,
+}: {
+  mediaType?: "movie" | "tv";
+  page?: number;
+}) {
+  const res = await fetch(
+    `${BASE_URL}/${mediaType}/popular?api_key=${API_KEY}&page=${page}`
+  );
+  if (!res.ok) throw new Error("Failed to fetch movies");
+  return res.json();
+}
