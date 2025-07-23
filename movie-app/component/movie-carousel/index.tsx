@@ -33,7 +33,7 @@ export function MovieCarousel({ title, movies, mediaType}: MovieCarouselProps) {
  
   if (!movies || movies.length === 0) {
     return (
-      <section className="space-y-4 px-4 md:px-8 lg:px-16 xl:px-24 h-50 border mb-4">
+      <section className="space-y-4 px-4 md:px-8 lg:px-16 xl:px-24 h-50  mb-4">
         <h2 className="text-2xl font-bold">{title}</h2>
         <p className="text-gray-500">No {title} found.</p>
       </section>
