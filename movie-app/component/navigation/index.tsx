@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 // import { ThemeToggle } from "@/components/theme-toggle";
 import { Menu, Search, User, Film } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Image from "next/image";
 import SearchBar from "../search-bar";
+import { UserDropdown } from "../user-dropdown";
 
 
 export function Navigation() {
@@ -83,39 +83,13 @@ export function Navigation() {
             </Button>
           </Link>
 
-          {/* <ThemeToggle /> */}
+          {/* user */}
 
           <Link href="/">
             <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
+              <UserDropdown />
             </Button>
           </Link>
-
-          {/* Mobile Menu */}
-          <Sheet>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-64">
-              <div className="flex flex-col space-y-4 mt-8">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`text-lg font-medium transition-colors hover:text-primary ${
-                      pathname === item.href
-                        ? "text-primary"
-                        : "text-muted-foreground"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
     </nav>

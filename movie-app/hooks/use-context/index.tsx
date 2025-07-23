@@ -18,6 +18,7 @@ import {
   useState,
   ReactNode,
 } from "react";
+import { usePathname } from "next/navigation";
 
 interface CountryOption {
   code: string;
@@ -35,9 +36,16 @@ interface MovieContextType {
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
   genres: { id: number; name: string }[];
-  fetchFilteredMoviesFromContext: (
-    filters: Record<string, string | undefined>
-  ) => void;
+ 
+  fetchFilteredMoviesFromContext: (filters: {
+    with_genres?: string;
+    primary_release_year?: string;
+    first_air_date_year?: string;
+    vote_average_gte?: string;
+    sort_by?: string;
+    with_origin_country?: string;
+    page?: string;
+  }) => void;
   movieType: "movie" | "tv";
   setMovieType: (type: "movie" | "tv") => void;
   originCountry: string;
@@ -74,22 +82,17 @@ const MovieContext = createContext<MovieContextType>({
   setSelectedGenre: () => { },
   loadMoreMovies: () => { },
   searchQuery: "",
-  setSearchQuery: function (query: string): void
-  {
-    throw new Error("Function not implemented.");
-  },
-  searchResults: [],
-  setSearchResults: function (results: Movie[]): void
-  {
-    throw new Error("Function not implemented.");
-  },
-  performSearch: function (query: string): void
-  {
-    throw new Error("Function not implemented.");
-  }
+  setSearchQuery: () => { },
+  setSearchResults: () => { },
+  performSearch: () => { },
+  searchResults: []
 });
 
+const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+
 export const MovieProvider = ({ children }: { children: ReactNode }) => {
+  const pathname = usePathname();
+
   const [currentPage, setCurrentPage] = useState<number>(1); // Add this state
   const [topRated, setTopRated] = useState<Movie[]>([]);
   const [popular, setPopular] = useState<Movie[]>([]);
@@ -102,6 +105,9 @@ export const MovieProvider = ({ children }: { children: ReactNode }) => {
   const [movieType, setMovieType] = useState<"movie" | "tv">("movie");
   const [originCountry, setOriginCountry] = useState<string>("");
   const [selectedGenre, setSelectedGenre] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Movie[]>([]);
+  // const [page, setPage] = useState(1);
 
   const countries: CountryOption[] = [
     { code: "US", name: "United States" },
@@ -113,6 +119,14 @@ export const MovieProvider = ({ children }: { children: ReactNode }) => {
   ];
 
   useEffect(() => {
+    if (pathname.startsWith("/discover/tv")) {
+      setMovieType("tv");
+    } else {
+      setMovieType("movie");
+    }
+  }, [pathname]);
+
+  useEffect(() => {
     const updateGenres = async () => {
       if (movieType) {
         const genreRes = await fetchGenresForMedia(movieType); // now dynamic by media type
@@ -121,8 +135,6 @@ export const MovieProvider = ({ children }: { children: ReactNode }) => {
     };
     updateGenres();
   }, [movieType]);
-
- 
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -152,7 +164,7 @@ export const MovieProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       try {
         const data = await fetchMovies({ mediaType: movieType });
-        setMovies(data.results || []);
+        setMovies(Array.isArray(data.results) ? data.results : []);
         setCurrentPage(1); // reset page on type switch
       } catch (error) {
         console.error("Failed to fetch default movies:", error);
@@ -164,36 +176,55 @@ export const MovieProvider = ({ children }: { children: ReactNode }) => {
     getMovies();
   }, [movieType]);
 
-  const fetchFilteredMoviesFromContext = async (
-    filters: Record<string, string | undefined>
-  ) => {
+  const fetchFilteredMoviesFromContext = async (filters: {
+    with_genres?: string;
+    primary_release_year?: string;
+    first_air_date_year?: string;
+    vote_average_gte?: string;
+    sort_by?: string;
+    with_origin_country?: string;
+    page?: string;
+  }) => {
     const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
     if (!TMDB_API_KEY) return;
 
-    setIsLoading(true);
-    const params = new URLSearchParams({
-      api_key: TMDB_API_KEY,
-      sort_by: filters.sort_by || "popularity.desc",
-    });
+    
 
-    if (filters.with_genres) params.append("with_genres", filters.with_genres);
-    if (filters.primary_release_year)
-      params.append("primary_release_year", filters.primary_release_year);
-    if (filters.first_air_date_year)
-      params.append("first_air_date_year", filters.first_air_date_year);
-    if (filters.vote_average_gte)
-      params.append("vote_average.gte", filters.vote_average_gte);
-    if (filters.with_origin_country)
-      params.append("with_origin_country", filters.with_origin_country);
+    try
+    {
+      setIsLoading(true);
+      const params = new URLSearchParams({
+        api_key: TMDB_API_KEY,
+        sort_by: filters.sort_by || "popularity.desc",
+        page: filters.page || "1",
+      });
 
-    const type = movieType === "tv" ? "tv" : "movie";
+      if (filters.with_genres)
+        params.append("with_genres", filters.with_genres);
+      if (filters.vote_average_gte)
+        params.append("vote_average.gte", filters.vote_average_gte);
+      if (filters.with_origin_country)
+        params.append("with_origin_country", filters.with_origin_country);
 
-    try {
+      if (movieType === "movie" && filters.primary_release_year)
+        params.append("primary_release_year", filters.primary_release_year);
+
+      if (movieType === "tv" && filters.first_air_date_year)
+        params.append("first_air_date_year", filters.first_air_date_year);
+
       const res = await fetch(
-        `https://api.themoviedb.org/3/discover/${type}?${params.toString()}`
+        `https://api.themoviedb.org/3/discover/${movieType}?${params.toString()}`
       );
       const data = await res.json();
-      setMovies(data.results || []);
+
+      if (Array.isArray(data.results)) {
+        const tagged = data.results.map((item: any) => ({
+          ...item,
+          media_type: movieType,
+        }));
+        setMovies(tagged);
+        setCurrentPage(parseInt(filters.page || "1"));
+      }
     } catch (error) {
       console.error("Failed to fetch filtered movies", error);
     } finally {
@@ -201,11 +232,19 @@ export const MovieProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<Movie[]>([]);
+  const loadMoreMovies = () =>
+  {
+    setIsLoading(true);
+    fetchFilteredMoviesFromContext({
+      with_genres: selectedGenre || undefined,
+      with_origin_country: originCountry || undefined,
+      page: (currentPage + 1).toString(),
+    });
+    setIsLoading(false);
+  };
+
 
   const performSearch = async (query: string) => {
-    const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
     if (!TMDB_API_KEY || !query) return;
 
     setIsLoading(true);
@@ -224,29 +263,6 @@ export const MovieProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const loadMoreMovies = async () => {
-    const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-    if (!TMDB_API_KEY) return;
-
-    setIsLoading(true);
-    try {
-      const nextPage = currentPage + 1;
-      const res = await fetch(
-        `https://api.themoviedb.org/3/${
-          movieType === "tv" ? "tv" : "movie"
-        }/popular?api_key=${TMDB_API_KEY}&page=${nextPage}`
-      );
-      const data = await res.json();
-      if (data.results && Array.isArray(data.results)) {
-        setMovies((prev) => [...prev, ...data.results]);
-        setCurrentPage(nextPage);
-      }
-    } catch (error) {
-      console.error("Failed to load more movies:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <MovieContext.Provider
@@ -269,12 +285,12 @@ export const MovieProvider = ({ children }: { children: ReactNode }) => {
         countries,
         selectedGenre,
         setSelectedGenre,
-        loadMoreMovies,
         searchQuery,
         setSearchQuery,
         searchResults,
         setSearchResults,
         performSearch,
+        loadMoreMovies,
       }}
     >
       {children}

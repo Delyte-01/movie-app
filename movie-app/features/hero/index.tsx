@@ -70,7 +70,8 @@ export default function HeroSlider({ movies }: HeroSliderProps) {
     ]
   );
 
-  const fallbackImage = "/placeholder.svg";
+  const fallbackImage =
+    "https://res.cloudinary.com/dk5mfu099/image/upload/v1753282660/24a0b637f2177abc37d68c0998fd7211_jgjows.jpg";
 
   return (
     <div className="relative mb-10">
@@ -88,8 +89,23 @@ export default function HeroSlider({ movies }: HeroSliderProps) {
                     : fallbackImage
                 }
                 alt={movie.title}
+                quality={100} // increase quality
+                sizes="(max-width: 768px) 100vw, 100vw"
                 fill
-                className="object-cover brightness-[0.85] sm:brightness-100 contrast-[1.1]"
+                className="object-cover brightness-[0.85] sm:brightness-100 contrast-[1.1] hidden md:block"
+                priority
+              />
+              <Image
+                src={
+                  movie.poster_path
+                    ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
+                    : fallbackImage
+                }
+                alt={movie.title}
+                quality={100} // increase quality
+                sizes="(max-width: 768px) 100vw, 100vw"
+                fill
+                className="object-cover brightness-[0.85] sm:brightness-100 contrast-[1.1] block md:hidden"
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />

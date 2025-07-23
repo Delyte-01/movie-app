@@ -1,24 +1,17 @@
 "use client";
-import React, { useEffect, useState } from 'react'
-import { useMovieContext } from "@/hooks/use-context";
-import { Button } from '@/components/ui/button';
-import { FilterSidebar } from '@/component/filter-sidebar';
-import { MovieGrid } from '@/component/movie-grid';
+import React, { useState,useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { FilterSidebar } from "@/component/filter-sidebar";
+import { MovieGrid } from "@/component/movie-grid";
 
 
+const TvFilterPage = () => {
 
-const Tv = () =>
-{
-  const { setMovieType } = useMovieContext();
-   const [showFilters, setShowFilters] = useState<boolean>(false);
-    useEffect(() => {
-      setMovieType("tv");
-    }, []);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
+  
+
   return (
     <div>
-      {/* <h1 className="text-2xl font-bold mb-4">TV Shows</h1>
-      <p className="text-gray-700">Discover your favorite TV shows here.</p> */}
-      {/* Additional content can be added here */}
       <div className="flex flex-col md:flex-row min-h-screen bg-white text-gray-900">
         {/* Toggle for mobile */}
         <div className="md:hidden p-4">
@@ -46,6 +39,6 @@ const Tv = () =>
       </div>
     </div>
   );
-}
+};
 
-export default Tv
+export default TvFilterPage;

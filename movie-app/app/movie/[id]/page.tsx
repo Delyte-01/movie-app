@@ -34,7 +34,11 @@ export default async function MoviePage({ params }: {
       {/* Cast Section */}
       <div className="container px-4 space-y-12">
         {cast?.length > 0 && <CastSlider cast={cast} />}
-        <MovieCarousel title="Similar Movies" movies={similarMovies} />
+        <MovieCarousel
+          title="Similar Movies"
+          movies={similarMovies?.results || []}
+          mediaType="movie"
+        />
       </div>
     </div>
   );

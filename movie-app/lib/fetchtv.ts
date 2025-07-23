@@ -28,13 +28,12 @@ export async function fetchTVCast(id: string) {
 export async function fetchSimilarTVShows(id: string) {
   try {
     const res = await fetch(
-      `${BASE_URL}/tv/${id}/similar?api_key=${API_KEY}&language=en-US`
+      `${BASE_URL}/tv/${id}/similar?api_key=${API_KEY}&language=en-US&page=1`
     );
     if (!res.ok) throw new Error("Failed to fetch similar TV shows");
-    const data = await res.json();
-    return data.results?.slice(0, 10) || [];
+    return res.json();
   } catch (error) {
     console.error("fetchSimilarTVShows error:", error);
-    return [];
+    return { results: [] };
   }
 }

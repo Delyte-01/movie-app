@@ -11,7 +11,7 @@ import React from "react";
 
 
 const Home = () => {
-  const { topRated, popular, upcoming, nowPlaying, loading } =
+  const { topRated, popular, upcoming, nowPlaying, loading, movieType } =
     useMovieContext();
 
     if (loading) {
@@ -24,25 +24,34 @@ const Home = () => {
       );
     }
   return (
-    <div
-    >
- 
+    <div>
       <HeroSlider movies={popular.slice(0, 5)} />
 
       <div className="container px-4 space-y-12">
         {/* <HomePage /> */}
-        <MovieCarousel title="Trending Now" movies={popular} />
+        <MovieCarousel
+          title="Trending Now"
+          movies={popular}
+          mediaType="movie"
+        />
 
         {/* <CategorySection title="Popular Movies" movies={trendingMovies} /> */}
 
-        <MovieCarousel title="Top Rated" movies={topRated} />
+        <MovieCarousel title="Top Rated" movies={topRated} mediaType="movie" />
 
-        <MovieCarousel title="Now Playing" movies={nowPlaying} />
+        <MovieCarousel
+          title="Now Playing"
+          movies={nowPlaying}
+          mediaType="movie"
+        />
 
-        <MovieCarousel title="Upcoming" movies={upcoming} />
+        <MovieCarousel title="Upcoming" movies={upcoming} mediaType="movie" />
       </div>
     </div>
   );
 };
 
 export default Home;
+
+
+

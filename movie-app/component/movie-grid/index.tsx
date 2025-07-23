@@ -4,18 +4,17 @@ import { MovieCard } from "../movie-card";
 import { Button } from "@/components/ui/button";
 
 export function MovieGrid() {
-  const { isLoading, movies, loadMoreMovies } = useMovieContext();
+  const { isLoading,loading, movies,movieType, loadMoreMovies } = useMovieContext();
 
-  if (isLoading || !movies || movies.length === 0)
-    return <p>No movies found.</p>;
+  
 
   const displayMovies = movies.length > 0 ? movies : null;
 
-  if (!displayMovies || displayMovies.length === 0) {
+   if (!displayMovies || displayMovies.length === 0) {
     return <p className="text-center py-6 text-gray-500">No movies found.</p>;
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
         {Array.from({ length: 16 }).map((_, index) => (
@@ -28,19 +27,21 @@ export function MovieGrid() {
     );
   }
 
+
   return (
     <div className="grid grid-col-1  md:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
       {displayMovies &&
         displayMovies.slice(0, 16).map((movie) => (
           <div key={movie.id} className="mx-auto">
-            <MovieCard movie={movie} />
+            <MovieCard movie={movie} mediaType={movieType} />
           </div>
         ))}
-      {displayMovies.length > 0 && (
+      {/* Load More Button */}
+      {displayMovies && (
         <Button
-          onClick={() => loadMoreMovies()}
+          onClick={loadMoreMovies}
           disabled={isLoading}
-          className="col-span-full mt-6 px-4 py-2 bg-blue-600 text-white rounded cursor-pointer"
+          className="col-span-full mt-6 px-4 py-2 bg-blue-600 text-white rounded cursor-pointer "
         >
           {isLoading ? "Loading..." : "Load More"}
         </Button>

@@ -9,27 +9,17 @@ import { useMovieContext } from "@/hooks/use-context";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Movie } from "@/lib/types";
 
-// interface Movieprop {
-//   id: number;
-//   title: string;
-//   poster_path: string;
-//   vote_average: number;
-//   release_date: string;
-// }
 
 interface MovieCarouselProps {
   title: string;
   movies: Movie[];
+  mediaType: "movie" | "tv";
 }
 
-export function MovieCarousel({
-  title,
-  movies,
-}: MovieCarouselProps) {
-    const scrollRef = useRef<HTMLDivElement>(null);
-    
-     const { loading } =
-          useMovieContext();
+export function MovieCarousel({ title, movies, mediaType}: MovieCarouselProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const { loading } = useMovieContext();
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -40,6 +30,21 @@ export function MovieCarousel({
       });
     }
   };
+ 
+  if (!movies || movies.length === 0) {
+    return (
+      <section className="space-y-4 px-4 md:px-8 lg:px-16 xl:px-24 h-50 border mb-4">
+        <h2 className="text-2xl font-bold">{title}</h2>
+        <p className="text-gray-500">No {title} found.</p>
+      </section>
+    );
+  }
+  {
+    !movies && (
+      <p className="text-center text-gray-500 mt-2 ">No {title} found.</p>
+    );
+  }
+
 
   return (
     <section className="space-y-4 px-4 md:px-8 lg:px-16 xl:px-24">
@@ -64,7 +69,6 @@ export function MovieCarousel({
           </Button>
         </div>
       </div>
-
       <div
         ref={scrollRef}
         className="flex space-x-4 overflow-x-auto scrollbar-hide pb-4"
@@ -75,11 +79,12 @@ export function MovieCarousel({
             {loading && index < 4 ? (
               <Skeleton className="w-64 rounded-sm" />
             ) : (
-              <MovieCard movie={movie} />
+              <MovieCard movie={movie} mediaType={mediaType} />
             )}
           </div>
         ))}
       </div>
+      
     </section>
   );
 }

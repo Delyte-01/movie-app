@@ -25,8 +25,6 @@ export async function fetchPopularMovies() {
   return fetchFromTMDB("/movie/popular");
 }
 
-
-
 export const fetchUpcomingMovies = async () => {
   const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   if (!TMDB_API_KEY) throw new Error("Missing TMDB API Key");
@@ -39,11 +37,9 @@ export const fetchUpcomingMovies = async () => {
   return res.json();
 };
 
-
 export async function fetchNowPlayingMovies() {
   return fetchFromTMDB("/movie/now_playing");
 }
-
 
 export async function fetchMovieDetails(id: string) {
   const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
@@ -63,24 +59,7 @@ export async function fetchMovieCast(id: string) {
     return [];
   }
 }
-  
-export async function fetchSimilarMovies(movieId: string) {
-  try {
-    const res = await fetch(
-      `${BASE_URL}/movie/${movieId}/similar?api_key=${API_KEY}`
-    );
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch similar movies");
-    }
-
-    const data = await res.json();
-    return data.results;
-  } catch (error) {
-    console.error("Error fetching similar movies:", error);
-    return [];
-  }
-}
 
 export async function fetchMovies({
   mediaType = "movie",
@@ -95,3 +74,11 @@ export async function fetchMovies({
   if (!res.ok) throw new Error("Failed to fetch movies");
   return res.json();
 }
+
+export async function fetchSimilarMovies(id: string) {
+  const res = await fetch(`${BASE_URL}/movie/${id}/similar?api_key=${API_KEY}`);
+  if (!res.ok) throw new Error("Failed to fetch similar movies");
+  return res.json();
+}
+
+

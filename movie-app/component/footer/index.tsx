@@ -3,8 +3,11 @@ import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import Image from "next/image";
 
 export function Footer() {
+  const phoneNumber = "2348139760048"; // Nigeria +234
+  const textMessage = encodeURIComponent("Hello, I'm interested in your work!");
+
   return (
-    <footer className="bg-black/95 text-gray-400 md:p-20 mt-auto">
+    <footer className="bg-black/95 text-gray-400 p-10 md:p-20 mt-auto pb-20 md:pb-0">
       <div className="container px-4 mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -34,18 +37,24 @@ export function Footer() {
             <h4 className="text-white font-semibold">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/movies" className="hover:text-white transition">
+                <Link
+                  href="/discover/movie"
+                  className="hover:text-white transition"
+                >
                   Movies
                 </Link>
               </li>
               <li>
-                <Link href="/tv-shows" className="hover:text-white transition">
+                <Link
+                  href="/discover/tv"
+                  className="hover:text-white transition"
+                >
                   TV Shows
                 </Link>
               </li>
               <li>
-                <Link href="/upcoming" className="hover:text-white transition">
-                  Upcoming
+                <Link href="/" className="hover:text-white transition">
+                  Home
                 </Link>
               </li>
             </ul>
@@ -56,17 +65,26 @@ export function Footer() {
             <h4 className="text-white font-semibold">Legal</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/privacy" className="hover:text-white transition">
+                <Link
+                  href="/privacy-policy"
+                  className="hover:text-white transition"
+                >
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-white transition">
+                <Link
+                  href="/terms-of-services"
+                  className="hover:text-white transition"
+                >
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition">
+                <Link
+                  href={`https://wa.me/${phoneNumber}?text=${textMessage}`}
+                  className="hover:text-white transition"
+                >
                   Contact Us
                 </Link>
               </li>

@@ -1,16 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useMovieContext } from "@/hooks/use-context";
+
 import { Button } from "@/components/ui/button";
 import { FilterSidebar } from "@/component/filter-sidebar";
 import { MovieGrid } from "@/component/movie-grid";
 
-const Tv = () => {
-  const { setMovieType } = useMovieContext();
+const MovieFilterPage = () => {
+
   const [showFilters, setShowFilters] = useState<boolean>(false);
-  useEffect(() => {
-    setMovieType("movie");
-  }, []);
+
   return (
     <div>
   
@@ -43,4 +41,4 @@ const Tv = () => {
   );
 };
 
-export default Tv;
+export default MovieFilterPage;

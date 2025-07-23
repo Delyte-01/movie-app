@@ -49,7 +49,8 @@ export function MovieDetails({
 
    const displayTitle = title || name || "Untitled";
    const displayDate = release_date || first_air_date || "Unknown";
-   const displayRuntime = runtime ?? episode_run_time?.[0] ?? "Unknown runtime";
+  const displayRuntime = runtime ?? episode_run_time?.[0] ?? "Unknown runtime";
+  
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -161,13 +162,17 @@ export function MovieDetails({
                   <div>
                     <span className="font-semibold">Budget: </span>
                     <span className="text-muted-foreground">
-                      {formatCurrency(budget)}
+                      {typeof budget === "number" && budget > 0
+                        ? formatCurrency(budget)
+                        : "Not Available"}
                     </span>
                   </div>
                   <div>
                     <span className="font-semibold">Revenue: </span>
                     <span className="text-muted-foreground">
-                      {formatCurrency(revenue)}
+                      {typeof revenue === "number" && revenue > 0
+                        ? formatCurrency(revenue)
+                        : "Not Available"}
                     </span>
                   </div>
                 </div>

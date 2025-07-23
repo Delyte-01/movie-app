@@ -6,15 +6,15 @@ import {
 import { MovieDetails } from "@/component/movie-details";
 import { CastSlider } from "@/component/cast";
 import { MovieCarousel } from "@/component/movie-carousel";
+import { Metadata } from "next";
 
 
 export default async function TvPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await  params;
   if (!id) return <div>TV Show not found</div>;
-  // Fetch TV show details, cast, and similar shows
   const tv = await fetchTVDetails(id);
   const cast = await fetchTVCast(id);
-  const similar = await fetchSimilarTVShows(id);
+  const similarTVShows = await fetchSimilarTVShows(id);
 
   if (!tv) {
     return (
@@ -29,8 +29,34 @@ export default async function TvPage({ params }: { params: Promise<{ id: string 
       <MovieDetails {...tv} />
       <div className="container px-4 space-y-12">
         {cast?.length > 0 && <CastSlider cast={cast} />}
-        <MovieCarousel title="Similar TV Shows" movies={similar} />
+        <MovieCarousel
+          title="Similar TV Shows"
+          movies={similarTVShows?.results || []}
+          mediaType="tv"
+        />
       </div>
     </div>
   );
+}
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const tv = await fetchTVDetails(id);
+
+  return {
+    title:tv?.name || tv?.title || "Movie Details",
+    description:tv?.overview || "Watch and explore movie information.",
+    openGraph: {
+      title: tv?.name || "Movie Details",
+      description: tv?.overview || "",
+      images: tv?.backdrop_path
+        ? [`https://image.tmdb.org/t/p/w780${tv.backdrop_path}`]
+        : [],
+    },
+  };
 }

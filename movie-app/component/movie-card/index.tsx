@@ -9,24 +9,26 @@ import { Star, Play, Plus } from "lucide-react";
 import { Movie } from "@/lib/types";
 import { useMovieContext } from "@/hooks/use-context";
 
-
 interface MovieCardProps {
   movie: Movie;
   priority?: boolean;
+  mediaType: "movie" | "tv";
 }
 
-export function MovieCard({ movie }: MovieCardProps) {
+export function MovieCard({ movie, mediaType }: MovieCardProps) {
   const { movieType } = useMovieContext();
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const media_type = mediaType || movieType;
+  console.log("Card:", movie.id, mediaType, media_type);
 
   return (
     <div
-      className="group relative w-64 transition-transform duration-300 hover:scale-105"
+      className="group relative w-64 transition-transform duration-300 hover:scale-105 cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link href={movieType === "tv" ? `/tv/${movie.id}` : `/movie/${movie.id}`} className="block">
+      <Link href={`/${media_type}/${movie.id}`} className="block">
         {/* Poster Image */}
         <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted border ">
           <Image
@@ -38,7 +40,7 @@ export function MovieCard({ movie }: MovieCardProps) {
             alt={movie.title || "Movie poster"}
             fill
             className={`object-cover transition-opacity duration-300 ${
-              imageLoaded ? "opacity-100" : "opacity-0"
+              imageLoaded ? "opacity-100 " : "opacity-0 "
             }`}
             priority
             onLoad={() => setImageLoaded(true)}
@@ -46,7 +48,7 @@ export function MovieCard({ movie }: MovieCardProps) {
           />
           {/* Tag: Movie or TV */}
           <span className="absolute top-2 left-2 bg-black/60 text-white text-xs p-1 rounded">
-            {movie.media_type || movieType === "tv" ? (
+            {movieType === "tv" || media_type === "tv" ? (
               <span>
                 <Image
                   src={
@@ -87,7 +89,7 @@ export function MovieCard({ movie }: MovieCardProps) {
                 <Play className="h-4 w-4" />
               </Button>
               <Button
-                size="icon"
+                size="icon" 
                 variant="outline"
                 className="bg-white/20 hover:bg-white/30 backdrop-blur border-white/20"
               >
