@@ -84,12 +84,6 @@ export function MovieCard({ movie, mediaType }: MovieCardProps) {
             <div className="absolute inset-0 flex items-center justify-center space-x-2">
               <Button
                 size="icon"
-                className="bg-white/20 hover:bg-white/30 backdrop-blur"
-              >
-                <Play className="h-4 w-4" />
-              </Button>
-              <Button
-                size="icon" 
                 variant="outline"
                 className="bg-white/20 hover:bg-white/30 backdrop-blur border-white/20"
               >

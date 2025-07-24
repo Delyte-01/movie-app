@@ -1,6 +1,5 @@
 "use client";
 
-import HeroSkeleton from "@/component/hero-skeleton";
 import { MovieCarousel } from "@/component/movie-carousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import HeroSlider from "@/features/hero";
@@ -23,7 +22,7 @@ const Home = () => {
   return (
     <div>
       <HeroSlider movies={popular.slice(0, 5)} />
-      <div className="container px-4 space-y-12">
+      <div className="container px-4 space-y-12  mx-auto">
         {/* <HomePage /> */}
         <MovieCarousel
           title="Trending Now"

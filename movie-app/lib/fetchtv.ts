@@ -37,3 +37,19 @@ export async function fetchSimilarTVShows(id: string) {
     return { results: [] };
   }
 }
+
+export async function fetchTVVideos(tvId: String) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/tv/${tvId}/videos?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch TV videos");
+  }
+
+  const data = await res.json();
+  const trailer = data.results.find(
+    (vid: any) => vid.type === "Trailer" && vid.site === "YouTube"
+  );
+ return trailer?.key;
+}

@@ -47,7 +47,7 @@ export function MovieCarousel({ title, movies, mediaType}: MovieCarouselProps) {
 
 
   return (
-    <section className="space-y-4 px-4 md:px-8 lg:px-16 xl:px-24">
+    <section className="space-y-4 px-4 md:px-8 lg:px-16 xl:px-24 ">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">{title}</h2>
         <div className="hidden md:flex space-x-2">

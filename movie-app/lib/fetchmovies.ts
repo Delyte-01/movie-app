@@ -82,3 +82,14 @@ export async function fetchSimilarMovies(id: string) {
 }
 
 
+// utils/fetchTrailer.ts
+export async function fetchTrailer(id: string, mediaType: 'movie' | 'tv') {
+  const res = await fetch(`https://api.themoviedb.org/3/${mediaType}/${id}/videos?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`);
+  const data = await res.json();
+
+  const trailer = data.results.find(
+    (vid: any) => vid.type === 'Trailer' && vid.site === 'YouTube'
+  );
+
+  return trailer?.key; // YouTube video ID
+}
