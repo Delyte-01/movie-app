@@ -6,7 +6,7 @@ interface TrailerProps {
 
 function Trailer({trailerKey}: TrailerProps) {
   return (
-    <section className="container px-4 mt-12">
+    <section className="container px-4 md:px-20 lg:px-30 mt-12">
       <h2 className="text-xl font-semibold mb-4">Watch Trailer</h2>
       <div className="aspect-video w-full rounded-md overflow-hidden shadow-lg border border-white/10">
         <iframe

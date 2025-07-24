@@ -34,7 +34,7 @@ export default async function TvPage({
 
   return (
     <div className="space-y-8">
-      <MovieDetails {...tv} />
+      <MovieDetails {...tv} trailerKey={trailerKey} />
       <div className="container px-4 space-y-12 mx-auto ">
         {cast?.length > 0 && <CastSlider cast={cast} />}
         {trailerKey && <Trailer trailerKey={trailerKey} />}

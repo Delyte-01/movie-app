@@ -24,6 +24,7 @@ interface MovieDetailsProps {
   revenue: number;
   tagline: string;
   trailer_url: string;
+  trailerKey: string;
 }
 
 export function MovieDetails({
@@ -44,9 +45,10 @@ export function MovieDetails({
   revenue,
   tagline,
   trailer_url,
+  trailerKey,
 }: MovieDetailsProps) {
   const [showTrailer, setShowTrailer] = useState(false);
-
+ console.log(trailerKey)
    const displayTitle = title || name || "Untitled";
    const displayDate = release_date || first_air_date || "Unknown";
   const displayRuntime = runtime ?? episode_run_time?.[0] ?? "Unknown runtime";
@@ -182,7 +184,7 @@ export function MovieDetails({
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"
-                  className="bg-primary hover:bg-primary/90"
+                  className="bg-primary hover:bg-primary/90 cursor-pointer"
                   onClick={() => setShowTrailer(true)}
                 >
                   <Play className="mr-2 h-5 w-5 fill-current" />
@@ -204,21 +206,22 @@ export function MovieDetails({
 
       {/* Trailer Modal */}
       {showTrailer && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setShowTrailer(false)}
+        >
           <div className="relative w-full max-w-4xl aspect-video">
             <iframe
-              src={trailer_url}
-              className="w-full h-full rounded-lg"
+              src={`https://www.youtube.com/embed/${trailerKey}`}
+              title="Trailer"
+              className="w-full h-full"
               allowFullScreen
             />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute -top-12 right-0 text-white hover:bg-white/20"
-              onClick={() => setShowTrailer(false)}
-            >
-              ✕
-            </Button>
+            {!trailerKey && (
+              <p className="text-sm text-white">
+                Trailer not available
+              </p>
+            )}
           </div>
         </div>
       )}
