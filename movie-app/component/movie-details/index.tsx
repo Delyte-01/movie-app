@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play, Plus, Share, Star, Clock, Calendar } from "lucide-react";
+import Trailer from "../trailer";
 
 interface MovieDetailsProps {
   id: number;
@@ -27,6 +28,7 @@ interface MovieDetailsProps {
   trailerKey: string;
 }
 
+
 export function MovieDetails({
   id,
   title,
@@ -44,7 +46,6 @@ export function MovieDetails({
   budget,
   revenue,
   tagline,
-  trailer_url,
   trailerKey,
 }: MovieDetailsProps) {
   const [showTrailer, setShowTrailer] = useState(false);
@@ -211,12 +212,7 @@ export function MovieDetails({
           onClick={() => setShowTrailer(false)}
         >
           <div className="relative w-full max-w-4xl aspect-video">
-            <iframe
-              src={`https://www.youtube.com/embed/${trailerKey}`}
-              title="Trailer"
-              className="w-full h-full"
-              allowFullScreen
-            />
+              <Trailer trailerKey={trailerKey} />
             {!trailerKey && (
               <p className="text-sm text-white">
                 Trailer not available

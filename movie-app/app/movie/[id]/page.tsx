@@ -32,7 +32,7 @@ export default async function MoviePage({ params }: {
   return (
     <div className="space-y-8">
       {/* Movie Info Section */}
-      <MovieDetails {...movie} />
+      <MovieDetails {...movie} trailerKey={trailerKey} />
 
       {/* Cast Section */}
       <div className="container px-4 space-y-12 mx-auto">

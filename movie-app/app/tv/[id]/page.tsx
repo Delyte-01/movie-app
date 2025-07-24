@@ -23,6 +23,7 @@ export default async function TvPage({
   const similarTVShows = await fetchSimilarTVShows(id);
   const trailerKey = await fetchTVVideos(id);
 
+ console.log(trailerKey)
 
   if (!tv) {
     return (
